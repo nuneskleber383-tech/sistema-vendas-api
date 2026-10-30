@@ -127,6 +127,7 @@ app.patch('/api/pedidos/:id', async (req, res) => {
         const camposStr = camposParaAtualizar.join(', ');
         const query = 'UPDATE pedidos SET ' + camposStr + ' WHERE id_pedido = ?';
         const [resultado] = await pool.query(query, valores);
+
         if (resultado.affectedRows === 0) {
             return res.status(404).json({ success: false, message: 'Pedido não encontrado.' });
         }
@@ -142,6 +143,6 @@ app.patch('/api/pedidos/:id', async (req, res) => {
 });
 
 // Inicialização do servidor
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log('🚀 Servidor rodando na porta ${PORT}');
 });
