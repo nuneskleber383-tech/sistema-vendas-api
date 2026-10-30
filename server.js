@@ -123,7 +123,8 @@ app.patch('/api/pedidos/:id', async (req, res) => {
 
         valores.push(id); // Adiciona o ID no final para a cláusula WHERE
 
-        const query = ´UPDATE pedidos SET ${camposParaAtualizar.join(', ')} WHERE id_pedido = ?´;
+        // CORREÇÃO AQUI: Uso de crases para a query dinâmica funcionar corretamente
+        const query = UPDATE pedidos SET ${camposParaAtualizar.join(', ')} WHERE id_pedido = ?;
         const [resultado] = await pool.query(query, valores);
 
         if (resultado.affectedRows === 0) {
