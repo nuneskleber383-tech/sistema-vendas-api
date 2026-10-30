@@ -143,5 +143,5 @@ app.patch('/api/pedidos/:id', async (req, res) => {
 
 // Inicialização do servidor
 app.listen(PORT, () => {
-    console.log(🚀 Servidor rodando na porta ${PORT});
+    console.log('🚀 Servidor rodando na porta ${PORT}');
 });
