@@ -36,6 +36,11 @@ pool.getConnection()
 // ROTAS DA API
 // ---------------------------------------------------------
 
+// Rota Raiz (Essencial para evitar o SIGTERM e falhas de Health Check no Easypanel)
+app.get('/', (req, res) => {
+    res.status(200).json({ success: true, message: 'API da Loja a funcionar com sucesso!' });
+});
+
 // 2. Rota GET /api/pedidos - Listar todos os pedidos (mais recentes primeiro)
 app.get('/api/pedidos', async (req, res) => {
     try {
@@ -123,8 +128,7 @@ app.patch('/api/pedidos/:id', async (req, res) => {
 
         valores.push(id); // Adiciona o ID no final para a cláusula WHERE
 
-        const camposStr = camposParaAtualizar.join(', ');
-        const query = 'UPDATE pedidos SET ' + camposStr + ' WHERE id_pedido = ?';
+        const query = UPDATE pedidos SET ${camposParaAtualizar.join(', ')} WHERE id_pedido = ?;
         const [resultado] = await pool.query(query, valores);
 
         if (resultado.affectedRows === 0) {
@@ -141,7 +145,7 @@ app.patch('/api/pedidos/:id', async (req, res) => {
     }
 });
 
-// Inicialização do servidor
+// Inicialização do servidor ajustada para aceitar ligações externas no container
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
