@@ -123,7 +123,6 @@ app.patch('/api/pedidos/:id', async (req, res) => {
 
         valores.push(id); // Adiciona o ID no final para a cláusula WHERE
 
-        // CORREÇÃO AQUI: Uso de crases para a query dinâmica funcionar corretamente
         const camposStr = camposParaAtualizar.join(', ');
         const query = 'UPDATE pedidos SET ' + camposStr + ' WHERE id_pedido = ?';
         const [resultado] = await pool.query(query, valores);
@@ -144,5 +143,5 @@ app.patch('/api/pedidos/:id', async (req, res) => {
 
 // Inicialização do servidor
 app.listen(PORT, '0.0.0.0', () => {
-    console.log('🚀 Servidor rodando na porta ${PORT}');
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
