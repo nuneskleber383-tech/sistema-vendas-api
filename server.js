@@ -92,7 +92,7 @@ app.get('/api/pedidos/:id', async (req, res) => {
     }
 });
 
-// 3. Rota PATCH /api/pedidos/:id - Atualizar o status do pedido (etapa_pedido ou status)
+// 3. Rota PATCH /api/pedidos/:id - Atualizar o status do pedido (etapa ou status)
 app.patch('/api/pedidos/:id', async (req, res) => {
     const { id } = req.params;
     const { etapa, status, aviso_entrega, observacao } = req.body;
@@ -102,7 +102,7 @@ app.patch('/api/pedidos/:id', async (req, res) => {
         const camposParaAtualizar = [];
         const valores = [];
 
-        if (etapa_pedido !== undefined) {
+        if (etapa !== undefined) {
             camposParaAtualizar.push('etapa = ?');
             valores.push(etapa);
         }
