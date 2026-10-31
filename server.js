@@ -95,7 +95,7 @@ app.get('/api/pedidos/:id', async (req, res) => {
 // 3. Rota PATCH /api/pedidos/:id - Atualizar o status do pedido (etapa_pedido ou status)
 app.patch('/api/pedidos/:id', async (req, res) => {
     const { id } = req.params;
-    const { etapa_pedido, status, aviso_entrega, observacao } = req.body;
+    const { etapa, status, aviso_entrega, observacao } = req.body;
 
     try {
         // Constrói dinamicamente os campos que serão atualizados para evitar sobrescrever com null
