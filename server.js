@@ -169,7 +169,7 @@ app.post('/api/pedidos', async (req, res) => {
 
         const [resultado] = await pool.query(
             `INSERT INTO pedidos
-            (\row_number\, chat_id, etapa, pedido, nome,
+            (\`row_number\`, chat_id, etapa, pedido, nome,
              endereco, pagamento, total, observacao)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
