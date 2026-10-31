@@ -104,7 +104,7 @@ app.patch('/api/pedidos/:id', async (req, res) => {
 
         if (etapa_pedido !== undefined) {
             camposParaAtualizar.push('etapa = ?');
-            valores.push(etapa_pedido);
+            valores.push(etapa);
         }
         if (status !== undefined) {
             camposParaAtualizar.push('status = ?');
