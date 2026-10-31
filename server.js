@@ -145,7 +145,62 @@ app.patch('/api/pedidos/:id', async (req, res) => {
         res.status(500).json({ success: false, message: 'Erro interno no servidor.' });
     }
 });
+// POST /api/pedidos - Cadastrar novo pedido
+app.post('/api/pedidos', async (req, res) => {
+    try {
+        const {
+            row_number,
+            chat_id,
+            etapa,
+            pedido,
+            nome,
+            endereco,
+            pagamento,
+            total,
+            observacao
+        } = req.body;
 
+        if (!chat_id || !pedido) {
+            return res.status(400).json({
+                success: false,
+                message: 'chat_id e pedido são obrigatórios.'
+            });
+        }
+
+        const [resultado] = await pool.query(
+            `INSERT INTO pedidos
+            (\row_number\, chat_id, etapa, pedido, nome,
+             endereco, pagamento, total, observacao)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                row_number || null,
+                String(chat_id),
+                etapa || 'recebido',
+                pedido,
+                nome || null,
+                endereco || null,
+                pagamento || null,
+                Number(total) || 0,
+                observacao || null
+            ]
+        );
+
+        return res.status(201).json({
+            success: true,
+            message: 'Pedido cadastrado com sucesso!',
+            id_pedido: resultado.insertId
+        });
+
+    } catch (error) {
+        console.error('Erro ao cadastrar pedido:', error);
+
+        return res.status(500).json({
+            success: false,
+            message: 'Erro ao cadastrar pedido.',
+            error: error.message
+        });
+    }
+});
 // Inicialização do servidor ajustada para aceitar ligações externas no container
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
