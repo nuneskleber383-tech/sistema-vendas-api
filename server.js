@@ -100,6 +100,38 @@ app.get('/api/pedidos/:id', async (req, res) => {
     }
 });
 
+// Rota GET /api/clientes - Listar clientes e histórico de compras
+app.get('/api/clientes', async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT
+                chat_id,
+                MAX(nome) AS nome,
+                MAX(endereco) AS endereco,
+                COUNT(*) AS quantidade_pedidos,
+                SUM(total) AS total_gasto,
+                MAX(criado_em) AS ultima_compra
+            FROM pedidos
+            WHERE chat_id IS NOT NULL
+              AND chat_id <> ''
+            GROUP BY chat_id
+            ORDER BY ultima_compra DESC
+        `);
+
+        res.json({
+            success: true,
+            data: rows
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno no servidor.'
+        });
+    }
+});
+
 // 3. Rota PATCH /api/pedidos/:id - Atualizar o status do pedido (etapa ou status)
 app.patch('/api/pedidos/:id', async (req, res) => {
     const { id } = req.params;
