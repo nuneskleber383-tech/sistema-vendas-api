@@ -42,15 +42,23 @@ app.get('/', (req, res) => {
 });
 
 // 2. Rota GET /api/pedidos - Listar todos os pedidos (mais recentes primeiro)
-`SELECT * FROM pedidos
-     WHERE criado_em >= CURDATE() 
-   AND criado_em < CURDATE() + INTERVAL 1 DAY
-     ORDER BY id_pedido DESC`
+app.get('/api/pedidos', async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            `SELECT * FROM pedidos
+             WHERE criado_em >= CURDATE()
+             AND criado_em < CURDATE() + INTERVAL 1 DAY
+             ORDER BY id_pedido DESC`
         );
+
         res.json({ success: true, data: rows });
+
     } catch (error) {
         console.error('Erro ao buscar pedidos:', error);
-        res.status(500).json({ success: false, message: 'Erro interno no servidor.' });
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno no servidor.'
+        });
     }
 });
 
