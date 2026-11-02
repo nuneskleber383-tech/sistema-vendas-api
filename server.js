@@ -62,6 +62,32 @@ app.get('/api/pedidos', async (req, res) => {
     }
 });
 
+// 3. Rota GET /api/entregas-pendentes
+app.get('/api/entregas-pendentes', async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT *
+            FROM pedidos
+            WHERE status IN ('saiu_para_entrega', 'entrega')
+               OR etapa IN ('saiu_para_entrega', 'entrega')
+            ORDER BY id_pedido DESC
+        `);
+
+        res.json({
+            success: true,
+            data: rows
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar entregas pendentes:', error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno no servidor.'
+        });
+    }
+});
+
 // 4. Rota GET /api/pedidos/:id - Detalhar um pedido específico com seus respectivos itens
 app.get('/api/pedidos/:id', async (req, res) => {
     const { id } = req.params;
