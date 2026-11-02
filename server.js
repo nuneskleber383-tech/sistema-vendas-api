@@ -133,6 +133,7 @@ app.get('/api/clientes', async (req, res) => {
             SELECT
                 chat_id,
                 MAX(nome) AS nome,
+                GROUP_CONCAT(DISTINCT nome SEPARATOR ' ') AS nomes,
                 MAX(endereco) AS endereco,
                 COUNT(*) AS quantidade_pedidos,
                 SUM(total) AS total_gasto,
