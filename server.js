@@ -62,6 +62,36 @@ app.get('/api/pedidos', async (req, res) => {
     }
 });
 
+// Histórico de faturamento dos últimos 7 dias
+app.get('/api/faturamento-semanal', async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT
+                DATE(criado_em) AS data,
+                COUNT(*) AS quantidade_pedidos,
+                SUM(total) AS faturamento
+            FROM pedidos
+            WHERE criado_em >= CURDATE() - INTERVAL 6 DAY
+              AND criado_em < CURDATE() + INTERVAL 1 DAY
+            GROUP BY DATE(criado_em)
+            ORDER BY data ASC
+        `);
+
+        res.json({
+            success: true,
+            data: rows
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar faturamento semanal:', error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno no servidor.'
+        });
+    }
+});
+
 // 3. Rota GET /api/entregas-pendentes
 app.get('/api/entregas-pendentes', async (req, res) => {
     try {
